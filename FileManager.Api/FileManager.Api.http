@@ -1,0 +1,11 @@
+@FileManager.Api_HostAddress = http://localhost:5225
+
+GET {{FileManager.Api_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+
+GET {{FileManager.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
