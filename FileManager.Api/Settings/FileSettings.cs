@@ -8,4 +8,27 @@
         public static readonly string[] BlockedSignatures = ["4D-5A","2F-2A","D0-CF"]; //.exe , .js , .msi
         public static readonly string[] AllowedImagesExtentions = [".jpg",".jpeg",".png"]; 
     }
+    public static class FileSorting
+    {
+        public static readonly HashSet<string> AllowedColumns =
+        [
+        nameof(UploadedFiles.FileName),
+        nameof(UploadedFiles.ContentType),
+        nameof(UploadedFiles.FileSize),
+        nameof(UploadedFiles.UploadedAt),
+        nameof(UploadedFiles.FileExtension)
+        ];
+    }
+    public static class SortDirections
+    {
+        public const string Asc = "ASC";
+        public const string Desc = "DESC";
+
+        public static readonly HashSet<string> Allowed =
+        [
+            Asc,
+            Desc
+        ];
+    }
+
 }

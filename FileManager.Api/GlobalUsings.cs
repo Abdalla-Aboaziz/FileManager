@@ -8,3 +8,4 @@ global using FileManager.Api.Entities;
 global using FileManager.Api.Settings;
 global using FileManager.Api.Apstractions;
 global using FileManager.Api.Contracts.Common;
+global using FileManager.Api.Contracts;

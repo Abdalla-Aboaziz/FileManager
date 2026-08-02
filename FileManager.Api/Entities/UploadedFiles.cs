@@ -8,7 +8,7 @@
         public string ContentType { get; set; } = string.Empty;
         public string FileExtension { get; set; } = string.Empty;
 
-        //public long FileSizeInMB { get; set; }
-        //public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
+        public long FileSize { get; set; }
+        public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
     }
 }

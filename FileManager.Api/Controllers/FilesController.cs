@@ -1,4 +1,5 @@
-﻿using FileManager.Api.Contracts;
+﻿using FileManager.Api.Common;
+using FileManager.Api.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,6 +54,22 @@ namespace FileManager.Api.Controllers
 
             return result ? NoContent() : NotFound();
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMetaData([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _fileService.GetFileMetaDataAsync(id, cancellationToken);
+
+            return result is null ? NotFound() : Ok(result);
+        }
+        [HttpGet("")]
+        public async Task<IActionResult> ListAllFiles([FromQuery] RequestFilters filters, CancellationToken cancellationToken)
+        {
+            var result = await _fileService.GetUploadedFilesAsync(filters, cancellationToken);
+
+            return Ok(result);
+        }
+
+        
         
 
     }
