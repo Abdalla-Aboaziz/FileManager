@@ -1,12 +1,13 @@
 ﻿namespace FileManager.Api.Services
 {
-    public class FileService(IWebHostEnvironment webHostEnvironment, ApplicationDbContext context) : IFileService
+    public class FileService(IWebHostEnvironment webHostEnvironment, ApplicationDbContext context , ILogger<FileService> logger) : IFileService
     {
         // Physical path where uploaded files will be stored.
         // Example: wwwroot/uploads
         private readonly string _filePath = $"{webHostEnvironment.WebRootPath}/uploads";
         private readonly string _imagesPath = $"{webHostEnvironment.WebRootPath}/images";
         private readonly ApplicationDbContext _context = context;
+        private readonly ILogger<FileService> _logger = logger;
 
         public async Task<Guid> UploadAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
@@ -67,6 +68,39 @@
             return (memoryStream.ToArray(), file.ContentType, file.FileName);
         }
 
+        public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var file = await _context.Files.FindAsync(id, cancellationToken);
+                if (file is null)
+                    return false;
+                var path = Path.Combine(_filePath, file.StoredFileName);
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+
+                }
+                _context.Files.Remove(file);
+                await _context.SaveChangesAsync(cancellationToken);
+                return true;            
+
+            }
+            catch (IOException ex )
+            {
+
+                _logger.LogError(ex, "Failed to delete file with Id {FileId}", id);
+                return false;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Failed to delete file {FileId}", id);
+                return false;
+            }
+
+
+        }
+
         public async Task<(FileStream? stream, string contentType, string fileName)> StreamAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var file = await _context.Files.FindAsync(id);
@@ -78,6 +112,8 @@
 
             return (fileStream, file.ContentType, file.FileName);
         }
+
+      
         private async Task<UploadedFiles> SaveFile (IFormFile file  , CancellationToken cancellationToken = default)
         {
             // Generate a random file name to prevent file name collisions

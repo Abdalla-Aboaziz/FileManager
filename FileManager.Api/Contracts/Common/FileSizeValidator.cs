@@ -4,7 +4,7 @@
     {
         public FileSizeValidator()
         {
-            //Size Validation
+            Size Validation
             RuleFor(x => x)  // x refers to file 
                 .Must((request, context) => request.Length <= FileSettings.MaxFileSizeInBytes)
                 .WithMessage($"Max File Size is {FileSettings.MaxFileSizeInMB} MB.")

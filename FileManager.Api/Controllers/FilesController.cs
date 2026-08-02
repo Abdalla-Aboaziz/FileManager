@@ -46,6 +46,14 @@ namespace FileManager.Api.Controllers
 
             return stream is null ? NotFound() : File(stream, contentType, fileName,true);
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _fileService.DeleteAsync(id, cancellationToken);
+
+            return result ? NoContent() : NotFound();
+        }
+        
 
     }
 }

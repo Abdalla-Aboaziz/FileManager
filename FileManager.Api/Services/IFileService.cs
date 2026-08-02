@@ -8,7 +8,7 @@
         Task UploadImageAsync(IFormFile image, CancellationToken cancellationToken = default);
         Task<(byte[] fileContent, string contentType, string fileName)> DownloadAsync(Guid id, CancellationToken cancellationToken = default);
         Task<(FileStream? stream, string contentType, string fileName)> StreamAsync(Guid id, CancellationToken cancellationToken = default);
-
+        Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 
 
     }
