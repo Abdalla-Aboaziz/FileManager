@@ -18,7 +18,8 @@ namespace FileManager.Api.Services
 
         Task<FileMetaDataResponse?>  GetFileMetaDataAsync(Guid id, CancellationToken cancellationToken = default);
         Task<PaginatedList<FileMetaDataResponse>> GetUploadedFilesAsync(RequestFilters filters, CancellationToken cancellationToken = default);
+        Task<bool> ReplaceAsync(Guid id, IFormFile file, CancellationToken cancellationToken = default);
 
 
-    }
+    } 
 }

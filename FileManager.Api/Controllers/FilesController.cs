@@ -69,8 +69,15 @@ namespace FileManager.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Replace([FromRoute] Guid id, [FromForm] UploadFileRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _fileService.ReplaceAsync(id, request.File, cancellationToken);
+
+            return result ? NoContent() : NotFound();
+        }
         
-        
+
 
     }
 }

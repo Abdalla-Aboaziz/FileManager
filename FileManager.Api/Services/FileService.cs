@@ -1,4 +1,5 @@
 ﻿using FileManager.Api.Common;
+using Microsoft.OpenApi;
 using System.Linq.Dynamic.Core;
 
 namespace FileManager.Api.Services
@@ -71,6 +72,7 @@ namespace FileManager.Api.Services
             return (memoryStream.ToArray(), file.ContentType, file.FileName);
         }
 
+       
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             try
@@ -101,6 +103,35 @@ namespace FileManager.Api.Services
                 return false;
             }
 
+
+        }
+        public async Task<bool> ReplaceAsync(Guid id, IFormFile file, CancellationToken cancellationToken = default)
+        {
+            var fileInDb = await _context.Files.FindAsync(id, cancellationToken);
+            if (fileInDb is null)
+                return false;
+
+            var oldStoredFileName = fileInDb.StoredFileName;
+
+            var uploadedFile = await SaveFile(file, cancellationToken);
+           
+
+            fileInDb.FileName = uploadedFile.FileName;
+            fileInDb.StoredFileName = uploadedFile.StoredFileName;
+            fileInDb.FileSize = uploadedFile.FileSize;
+            fileInDb.FileExtension = Path.GetExtension(uploadedFile.FileName);
+            fileInDb.ContentType = uploadedFile.ContentType;
+            fileInDb.UploadedAt = uploadedFile.UploadedAt;
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var oldPath = Path.Combine(_filePath, oldStoredFileName);
+            if (File.Exists(oldPath))
+            {
+                File.Delete(oldPath);
+            }
+       
+            return true;
 
         }
 
